@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained('companies');
             $table->string('title');
-            $table->string('slug');
-            $table->string('description');
+            $table->string('slug')->unique();
+            $table->text('description');
             $table->string('location')->nullable();
             $table->string('salary')->nullable();
-            $table->string('keywords');
-            $table->integer('score_threshold');
+            $table->text('keywords'); // Changed to text for more flexibility
+            $table->integer('score_threshold')->default(60); // Default score threshold
             $table->string('application_link')->nullable();
-            $table->string('deadline')->nullable();
+            $table->date('deadline')->nullable(); // Changed to date for better handling
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job__postings');
+        Schema::dropIfExists('job_postings');
     }
 };
