@@ -23,6 +23,7 @@ class Company extends Authenticatable
         'state',
         'zip',
         'country',
+        'company_id',
     ];
 
     protected $hidden = [
@@ -33,4 +34,10 @@ class Company extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function jobPostings(): HasMany
+    {
+        return $this->hasMany(JobPosting::class);
+    }
 }
+
