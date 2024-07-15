@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JobPosting extends Model
 {
@@ -24,6 +25,7 @@ class JobPosting extends Model
             }
         });
     }
+    
     protected $fillable = [
         'title',
         'description',
@@ -34,7 +36,7 @@ class JobPosting extends Model
         'slug',
         'location',
         'score_threshold',
-        
+        'formatted_description',
     ];
 
     public function company(): BelongsTo
@@ -50,6 +52,4 @@ class JobPosting extends Model
             ]
         ];
     }
-
-   
 }
