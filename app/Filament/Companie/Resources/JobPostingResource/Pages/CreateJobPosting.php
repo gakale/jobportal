@@ -7,10 +7,48 @@ use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Http;
 use App\Models\JobPosting;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class CreateJobPosting extends CreateRecord
 {
     protected static string $resource = JobPostingResource::class;
+
+    protected function beforeCreate(): void
+    {
+        // Get the authenticated company
+        $company = Auth::guard('company')->user();
+        if (!$company) {
+            Notification::make()
+                ->title('Erreur')
+                ->body('Entreprise non connectée.')
+                ->danger()
+                ->send();
+            $this->halt();
+            return;
+        }
+
+        // Vérifier si l'entreprise est en période d'essai expirée
+        if ($company->isOnTrial() && $company->jobPostings()->count() > 0 && $company->subscription->trial_ends_at < now()) {
+            Notification::make()
+                ->title('Erreur')
+                ->body('Votre période d\'essai est expirée. Veuillez souscrire à un abonnement pour continuer.')
+                ->danger()
+                ->send();
+            $this->halt();
+            return;
+        }
+
+        // Vérifier si l'entreprise n'a pas d'abonnement actif
+        if (!$company->hasActiveSubscription() && !$company->isOnTrial()) {
+            Notification::make()
+                ->title('Erreur')
+                ->body('Vous devez souscrire à un abonnement pour poster une offre d\'emploi.')
+                ->danger()
+                ->send();
+            $this->halt();
+            return;
+        }
+    }
 
     protected function afterCreate(): void
     {

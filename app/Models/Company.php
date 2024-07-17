@@ -39,5 +39,33 @@ class Company extends Authenticatable
     {
         return $this->hasMany(JobPosting::class);
     }
+
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
+    public function hasActiveSubscription()
+    {
+        $subscription = $this->subscription;
+
+        if ($subscription) {
+            return $subscription->isActive();
+        }
+
+        return false;
+    }
+
+    public function isOnTrial()
+    {
+        $subscription = $this->subscription;
+
+        if ($subscription) {
+            return $subscription->isTrial();
+        }
+
+        return false;
+    }
 }
 

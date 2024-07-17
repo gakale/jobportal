@@ -17,7 +17,7 @@ use Filament\Forms\Components\Split;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Hidden;
-
+use Illuminate\Support\HtmlString;
 
 class JobPostingResource extends Resource
 {
@@ -111,6 +111,14 @@ class JobPostingResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title'),
+                Tables\Columns\TextColumn::make('formatted_description')
+                        ->wrap()
+                        ->limit(50)
+                        ->words(10)
+                        ->lineClamp(2)
+                        ->markdown()
+                    ->label('Description'),
+
             ])
             ->filters([
                 //

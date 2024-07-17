@@ -18,7 +18,7 @@ class GenerateQuestionsResource extends Resource
     protected static ?string $model = Question::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-square-3-stack-3d';
-    protected static ?string $navigationGroup = "Question";
+    protected static ?string $navigationGroup = "List Questions";
 
     public static function form(Form $form): Form
     {

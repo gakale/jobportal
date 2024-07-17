@@ -1,20 +1,16 @@
 <?php
+namespace App\Filament\Companie\Resources\SubscriptionResource\Pages;
 
-namespace App\Filament\Companie\Resources\JobPostingResource\Pages;
-
-use App\Filament\Companie\Resources\JobPostingResource;
-use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Subscription;
 use App\Filament\Companie\Resources\SubscriptionResource;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Filament\Notifications\Notification;
-use Filament\Forms;
-use Filament\Forms\Form;
 
-class EditJobPosting extends EditRecord
+class ListSubscriptions extends ListRecords
 {
-    protected static string $resource = JobPostingResource::class;
+    protected static string $resource = SubscriptionResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -25,7 +21,7 @@ class EditJobPosting extends EditRecord
 
             if ($subscription && $subscription->isActive()) {
                 return [
-                    Actions\DeleteAction::make(),
+                    Actions\CreateAction::make(),
                 ];
             } else {
                 return [
@@ -35,12 +31,12 @@ class EditJobPosting extends EditRecord
                         ->color('danger')
                         ->requiresConfirmation()
                         ->modalHeading('Update Subscription')
-                        ->modalSubheading('Your subscription is not active. Please update your subscription to manage your job postings.')
+                        ->modalSubheading('Your subscription is not active. Please update your subscription to manage your subscriptions.')
                         ->modalButton('Update Subscription')
                         ->action(function () {
                             Notification::make()
                                 ->title('Update Subscription')
-                                ->body('Please update your subscription to manage your job postings.')
+                                ->body('Please update your subscription to manage your subscriptions.')
                                 ->success()
                                 ->send();
                         }),
@@ -48,20 +44,17 @@ class EditJobPosting extends EditRecord
             }
         }
 
-        return [
-            Actions\DeleteAction::make(),
-        ];
+        return [];
     }
 
-    public function form(Form $form): Form
+    protected function getTableQuery(): ?Builder
     {
-        return $form->schema([
-            Forms\Components\Section::make('Information')
-                ->schema([
-                    Forms\Components\MarkdownEditor::make('formatted_description')
-                        ->label('Formatted Description')
-                        ->required(),
-                ]),
-        ]);
+        $company = Auth::guard('company')->user();
+
+        if ($company) {
+            return parent::getTableQuery()->where('company_id', $company->id);
+        }
+
+        return parent::getTableQuery();
     }
 }

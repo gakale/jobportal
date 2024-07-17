@@ -36,6 +36,27 @@ class CreateTest extends CreateRecord
         // Log the authenticated company
         Log::info('Authenticated Company: ', $company->toArray());
 
+        // Check subscription status
+        if ($company->isOnTrial() && $data['number_of_questions'] > 1) {
+            Notification::make()
+                ->title('Erreur')
+                ->body('En période d\'essai, vous ne pouvez générer qu\'une seule question.')
+                ->danger()
+                ->send();
+            $this->halt();
+            return;
+        }
+
+        if (!$company->hasActiveSubscription() && !$company->isOnTrial()) {
+            Notification::make()
+                ->title('Erreur')
+                ->body('Vous devez souscrire à un abonnement pour générer des questions.')
+                ->danger()
+                ->send();
+            $this->halt();
+            return;
+        }
+
         // Find the job posting associated with this record
         $jobPosting = JobPosting::find($data['job_posting_id']);
         if (!$jobPosting) {
@@ -47,6 +68,7 @@ class CreateTest extends CreateRecord
             $this->halt();
             return;
         }
+
         $this->record = $this->getModel()::make();
 
         // Set the company_id and other attributes

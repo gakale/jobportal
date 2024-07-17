@@ -20,7 +20,7 @@ class TestResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
     protected static ?string $navigationLabel = "Generate Question";
-    protected static ?string $navigationGroup = "Question";
+    protected static ?string $navigationGroup = "List Questions";
 
 
     public static function form(Form $form): Form
@@ -68,6 +68,7 @@ class TestResource extends Resource
                     ->label('Durée (minutes)'),
                 Tables\Columns\TextColumn::make('language')
                     ->label('Langue'),
+
             ])
             ->filters([
                 //
