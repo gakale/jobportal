@@ -67,6 +67,22 @@ class JobPostingResource extends Resource
                     ->maxLength(255)
                     ->label('Salary'),
                 ])->columns(2),
+                Section::make('Photo & Job Type')
+                ->schema([
+                    Forms\Components\FileUpload::make('photo')
+                    ->label('Photo'),
+                    Forms\Components\Select::make('job_type')
+                        ->options([
+                            'Full-time' => 'Full-time',
+                            'Part-time' => 'Part-time',
+                            'Contract' => 'Contract',
+                            'Internship' => 'Internship',
+                            'Freelance' => 'Freelance',
+                            'Consultant' => 'Consultant',
+                            'Other' => 'Other',
+                        ])
+                        ->label('Job Type'),
+                ])->columns(2),
 
                 Section::make('Application Link')
                 ->schema([
@@ -95,7 +111,6 @@ class JobPostingResource extends Resource
                         'undo',
                     ])
                     ->label('Description'),
-
 
 
                 ])

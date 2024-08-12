@@ -37,6 +37,8 @@ class JobPosting extends Model
         'location',
         'score_threshold',
         'formatted_description',
+        'photo',
+        'job_type',
     ];
 
     public function company(): BelongsTo
@@ -51,5 +53,10 @@ class JobPosting extends Model
                 'source' => 'title'
             ]
         ];
+    }
+
+    public function candidature()
+    {
+        return $this->hasMany(Candidature::class);
     }
 }
