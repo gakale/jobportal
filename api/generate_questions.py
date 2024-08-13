@@ -7,7 +7,7 @@ import re
 app = Flask(__name__)
 
 # Configurez votre clé API Gemini
-genai.configure(api_key='AIzaSyADK33JZ8pvoJu2ESdlcn4PIqh_ixp2pw4')
+genai.configure(api_key='')
 
 @app.route('/generate_questions', methods=['POST'])
 def generate_questions():
